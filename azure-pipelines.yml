@@ -6,39 +6,19 @@
 trigger:
 - main
 
-pool:
-  vmImage: 'windows-latest'
 
-variables:
-  buildConfiguration: 'Release'
+pool:
+  vmImage: ubuntu-latest
 
 steps:
-
-    - task: UseDotNet@2 
-      displayName: ".NET Core 3.1.x"
-      inputs:
-        version: '3.1.x'
-        packageType: sdk
-    - script: dotnet build --configuration $(buildConfiguration)
-      displayName: 'dotnet build $(buildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: "Test"
-      inputs:
-        command: test
-        projects: '**/*tests/*.csproj'
-        arguments: '--configuration $(buildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: "Publish"
-      inputs:
-        command: 'publish'
-        publishWebProjects: true
-        arguments: '-r linux-x64 --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-        zipAfterPublish: true
-
-    - task: PublishBuildArtifacts@1
-      displayName: "Upload Artifacts"
-      inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'hanselminutes' 
+- checkout: none
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk'
+  inputs:
+    packageType: sdk
+    version: 7.x
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+- pwsh: |
+    dotnet new console -f net7.0  -o ./MyTestConsole
+    cd ./MyTestConsole
+    dotnet build -c Release
