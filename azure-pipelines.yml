@@ -4,21 +4,14 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- main
-
+- master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
+
+variables:
+  buildConfiguration: 'Release'
 
 steps:
-- checkout: none
-- task: UseDotNet@2
-  displayName: 'Use .NET Core sdk'
-  inputs:
-    packageType: sdk
-    version: 7.x
-    installationPath: $(Agent.ToolsDirectory)/dotnet
-- pwsh: |
-    dotnet new console -f net7.0  -o ./MyTestConsole
-    cd ./MyTestConsole
-    dotnet build -c Release
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
