@@ -1,9 +1,4 @@
 # ASP.NET Core
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
 # Build and test ASP.NET Core projects targeting .NET Core.
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
@@ -23,6 +18,11 @@ steps:
     command: 'restore'
     feedsToUse: 'select'
     vstsFeed: 'my-vsts-feed' # A series of numbers and letters
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'    
 
 - task: DotNetCoreCLI@2
   inputs:
